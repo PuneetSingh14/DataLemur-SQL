@@ -1,4 +1,4 @@
-Data Science Skills #Easy #LinkedIn
+Problem 1 : Data Science Skills #Easy #LinkedIn
 
 Given a table of candidates and their skills, you're tasked with finding the candidates best suited for an open Data Science job. You want to find candidates who are proficient in Python, Tableau, and PostgreSQL.
 
