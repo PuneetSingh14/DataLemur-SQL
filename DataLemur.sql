@@ -27,7 +27,7 @@ group by customer_id;
 
 
 -------------------------------------------------------------------------------------------------------------------------
-# Problem : linkedin (Data Science Skills)
+# Problem 1: linkedin (Data Science Skills)
 
 create table if not exists candidates(
 candidate_id int,
