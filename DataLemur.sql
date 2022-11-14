@@ -245,6 +245,16 @@ order by advertiser_id ;
 -------------------------------------------------------------------------------------------------------------------------------
 # Problem : LinkedIn Power Creators (Part 2)          MEDIUM LEVEL
  
+ # The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page.
+  This means that if someone's Linkedin page has more followers than all the company they work for, we can safely assume that person is a Power Creator.
+  Keep in mind that if a person works at multiple companies, we should take into account the company with the most followers.
+
+Write a query to return the IDs of these LinkedIn power creators in ascending order.
+
+Assumptions:
+
+A person can work at multiple companies.
+In the case of multiple companies, use the one with largest follower base.
  create table if not exists personal_profiles(
  profile_id int NOT NULL,
  `name` varchar(50) NOT NULL,
@@ -286,7 +296,19 @@ insert into company_pages values
 select * from company_pages;
 select * from personal_profiles;
 
-select  p.profile_id from personal_profiles p                              # Part- 1
+
+
+# Part- 1
+# The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page.
+If someone's LinkedIn page has more followers than the company they work for, we can safely assume that person is a power creator.
+
+Write a query to return the IDs of these LinkedIn power creators ordered by the IDs.
+
+Assumption:
+
+Each person with a LinkedIn profile in this database works at one company only.
+
+select  p.profile_id from personal_profiles p                            
 join company_pages c on p.employer_id = c.company_id
 where p.followers > c.followers
 order by profile_id;
@@ -366,5 +388,66 @@ WITH FACEBOOK AS (
 SELECT PG.PAGE_ID , PL.USER_ID , PL.LIKED_DATE  FROM PAGES AS PG
 LEFT JOIN PAGE_LIKES AS PL ON PG.PAGE_ID = PL.PAGE_ID)
 SELECT PAGE_ID FROM FACEBOOK WHERE LIKED_DATE IS NULL;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Unfinished Parts (TESLA)
+# PROBLEM : Tesla is investigating bottlenecks in their production, and they need your help to extract the relevant data. 
+  Write a SQL query that determines which parts have begun the assembly process but are not yet finished.
+  Assumption
+  Table parts_assembly contains all parts in production.
+  
+  CREATE TABLE PARTS_ASSEMBLY (
+  PART VARCHAR(50),
+  FINISH_DATE	DATETIME,
+  ASSEMBLY_STEP INTEGER);
+  
+INSERT INTO PARTS_ASSEMBLY VALUES
+("BATTERY",'2022-01-22 00:00:00',1),
+("BATTERY",'2022-02-22 00:00:00',2),
+("BATTERY",'2022-03-22 00:00:00',3),
+("BUMPER",'2022-01-22 00:00:00',1),
+("BUMPER",'2022-02-22 00:00:00',2),
+("BUMPER", NULL ,3),
+("BUMPER", NULL  ,4),
+("DOOR",'2022-01-22 00:00:00',1),
+("DOOR",'2022-02-22 00:00:00',2),
+('ENGINE','2022-01-01 00:00:00',1),
+('ENGINE','2022-01-25 00:00:00',2),
+('ENGINE','2022-02-28 00:00:00',3),
+('ENGINE','2022-04-01 00:00:00',4),
+('ENGINE', NULL ,5);
+
+SELECT PART FROM PARTS_ASSEMBLY WHERE FINISH_DATE IS NULL;
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# PROBLEM : User's Third Transaction (UBER)
+Assume you are given the table below on Uber transactions made by users.
+Write a query to obtain the third transaction of every user. Output the user id, spend and transaction date.
+
+CREATE TABLE IF NOT EXISTS TRANSACTIONS_3
+(USER_ID INT,
+SPEND DECIMAL(50,2),
+TRANSACTION_DATE TIMESTAMP);
+
+SELECT * FROM TRANSACTIONS_3;
+INSERT INTO TRANSACTIONS_3 VALUES
+(111,   100.50,	'2022-01-08 12:00:00'),
+(111,	55.00,	'2022-01-10 12:00:00'),
+(121,	36.00,	'2022-01-18 12:00:00'),
+(145,	24.99,	'2022-01-26 12:00:00'),
+(111,	89.60,	'2022-02-05 12:00:00'),
+(145,	45.30,	'2022-02-28 12:00:00'),
+(121,	22.20,	'2022-04-01 12:00:00'),
+(121,	67.90,	'2022-04-03 12:00:00'),
+(263,	156.00,	'2022-04-11 12:00:00'),
+(230,	78.30,	'2022-06-14 12:00:00'),
+(263,	68.12,	'2022-07-11 12:00:00'),
+(263,	100.00,	'2022-07-12 12:00:00');
+
+SELECT USER_ID, SPEND , TRANSACTION_DATE FROM (SELECT USER_ID , SPEND , TRANSACTION_DATE ,
+ RANK() OVER ( PARTITION BY  USER_ID ORDER BY TRANSACTION_DATE) AS TNX_3
+FROM TRANSACTIONS_3) AS T3  WHERE TNX_3 = 3;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
