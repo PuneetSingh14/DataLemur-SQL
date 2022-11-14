@@ -319,3 +319,44 @@ left join company_pages as pages on employee.company_id = pages.company_id
   order by p.profile_id;
 
 --------------------------------------------------------------------------------------------------------------------------
+
+
+# PROBLEM : Page With No Likes (FACEBOOK)
+   Assume you are given the tables below about Facebook pages and page likes. 
+   Write a query to return the page IDs of all the Facebook pages that don't have any likes. 
+   The output should be in ascending order.
+
+CREATE TABLE PAGES (
+PAGE_ID	INTEGER,
+`NAME` VARCHAR(50));
+
+INSERT INTO PAGES VALUES
+(20001,'SQL SOLUTIONS'),
+(20045, 'BRAIN EXERCISES'),
+(20701, 'TIPS FOR DATA ANALYSTS'),
+(31111, 'POSTGRES CRASH COURSE'),
+(32728, 'BREAK THE THREAD');
+
+SELECT * FROM PAGES;
+
+CREATE TABLE PAGE_LIKES
+(USER_ID INT ,
+PAGE_ID INT,
+LIKED_DATE DATETIME);
+
+INSERT INTO PAGE_LIKES VALUES
+(111,20001, '2022-04-08 00:00:00'),
+(121,20045,	'2022-03-12 00:00:00'),
+(156,20001,	'2022-07-25 00:00:00'),
+(255,20045,	'2022-07-19 00:00:00'),
+(125,20001,	'2022-07-19 00:00:00'),
+(144,31111,	'2022-06-21 00:00:00');
+
+SELECT * FROM PAGE_LIKES;
+
+WITH FACEBOOK AS (
+SELECT PG.PAGE_ID , PL.USER_ID , PL.LIKED_DATE  FROM PAGES AS PG
+LEFT JOIN PAGE_LIKES AS PL ON PG.PAGE_ID = PL.PAGE_ID)
+SELECT PAGE_ID FROM FACEBOOK WHERE LIKED_DATE IS NULL;
+
+
