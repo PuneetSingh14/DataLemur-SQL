@@ -102,7 +102,18 @@ select account_id,
  order by account_id asc;
  
  --------------------------------------------------------------------------------------------------------------------
- # Problem : LinkedIn Power Creators (Part 1)          
+ # Problem : LinkedIn Power Creators (Part 1) 
+ 
+ 
+# Part- 1
+# The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page.
+If someone's LinkedIn page has more followers than the company they work for, we can safely assume that person is a power creator.
+
+Write a query to return the IDs of these LinkedIn power creators ordered by the IDs.
+
+Assumption:
+
+Each person with a LinkedIn profile in this database works at one company only.
  
  create table if not exists personal_profiles(
  profile_id int NOT NULL,
@@ -298,22 +309,6 @@ select * from personal_profiles;
 
 
 
-# Part- 1
-# The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page.
-If someone's LinkedIn page has more followers than the company they work for, we can safely assume that person is a power creator.
-
-Write a query to return the IDs of these LinkedIn power creators ordered by the IDs.
-
-Assumption:
-
-Each person with a LinkedIn profile in this database works at one company only.
-
-select  p.profile_id from personal_profiles p                            
-join company_pages c on p.employer_id = c.company_id
-where p.followers > c.followers
-order by profile_id;
-
-
 create table if not exists employee_company (
 personal_profile_id	integer,
 company_id	integer);
@@ -421,6 +416,7 @@ INSERT INTO PARTS_ASSEMBLY VALUES
 SELECT PART FROM PARTS_ASSEMBLY WHERE FINISH_DATE IS NULL;
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 # PROBLEM : User's Third Transaction (UBER)
+
 Assume you are given the table below on Uber transactions made by users.
 Write a query to obtain the third transaction of every user. Output the user id, spend and transaction date.
 
@@ -451,6 +447,7 @@ FROM TRANSACTIONS_3) AS T3  WHERE TNX_3 = 3;
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Problem : Pharmacy Analytics (Part 1) CSV HEALTH
+
 # CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. Each drug can only be produced by one manufacturer.
 
 Write a query to find the top 3 most profitable drugs sold, and how much profit they made. Assume that there are no ties in the profits. Display the result from the highest to the lowest total profit.
