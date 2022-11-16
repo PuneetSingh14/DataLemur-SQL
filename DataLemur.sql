@@ -450,4 +450,72 @@ FROM TRANSACTIONS_3) AS T3  WHERE TNX_3 = 3;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Problem : Pharmacy Analytics (Part 1) CSV HEALTH
+# CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. Each drug can only be produced by one manufacturer.
+
+Write a query to find the top 3 most profitable drugs sold, and how much profit they made. Assume that there are no ties in the profits. Display the result from the highest to the lowest total profit.
+
+Definition:
+
+cogs stands for Cost of Goods Sold which is the direct cost associated with producing the drug.
+Total Profit = Total Sales - Cost of Goods Sold
+
+
+create table if not exists pharmacy_sales (
+roduct_id	integer,
+units_sold	integer,
+total_sales	decimal (50,2),
+cogs	decimal (50,2),
+manufacturer	varchar (50),
+drug	varchar (50) );
+select * from pharmacy_sales;
+
+LOAD DATA INFILE  
+'E:/data_sales.csv'
+into table pharmacy_sales
+FIELDS TERMINATED by ','
+ENCLOSED by '"'
+lines terminated by '\n';
+
+
+select  distinct ( total_sales - cogs)  as total_profit, Drug from pharmacy_sales order by total_profit desc
+limit 3;
+--------------------------------PART - 2-----------------------------------------------------------------------------------------------------------------------
+# CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. Each drug can only be produced by one manufacturer.
+
+Write a query to find out which manufacturer is associated with the drugs that were not profitable and how much money CVS lost on these drugs. 
+
+Output the manufacturer, number of drugs and total losses. Total losses should be in absolute value. Display the results with the highest losses on top.
+
+# Part - 2
+select manufacturer , count(drug) as Total_drug , round(sum(cogs - total_sales),0) as total_loss from pharmacy_sales
+where cogs > total_sales
+group by manufacturer 
+order by Total_drug desc;
+
+--------------------------------------------PART: 3-----------------------------------------------------------------------------------------------------------------
+
+# CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. Each drug can only be produced by one manufacturer.
+
+Write a query to find the total sales of drugs for each manufacturer. Round your answer to the closest million, and report your results in descending order of total sales.
+
+Because this data is being directly fed into a dashboard which is being seen by business stakeholders, format your result like this: "$36 million".
+
+# Part - 3
+select manufacturer , concat("$"," ",round(sum(total_sales)/1000000)," ","Millions") as sum_of_total_sales_in_Millions from pharmacy_sales
+group by manufacturer
+order by sum(total_sales) desc ;
+
+--------------------------------------------PART :4----------------------------------------------------------------------------------------------------------------------
+# CVS Health is trying to better understand its pharmacy sales, and how well different drugs are selling.
+
+Write a query to find the top 2 drugs sold, in terms of units sold, for each manufacturer. List your results in alphabetical order by manufacturer.
+
+#Part - 4
+
+select * from ( select  manufacturer , drug, rank() over (partition by manufacturer order by units_sold desc) as top
+ from pharmacy_sales) as top_2 where top <3;
+ 
+
+
 
