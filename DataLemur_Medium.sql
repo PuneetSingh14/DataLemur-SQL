@@ -146,9 +146,149 @@ SELECT * FROM
 WHERE TOP_SPEND = 1;
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Problem : App Click-through Rate (CTR)  [Facebook]
+
+#This is the same question as problem #1 in the SQL Chapter of Ace the Data Science Interview!
+
+Assume you have an events table on app analytics. Write a query to get the app’s click-through rate (CTR %) in 2022. 
+Output the results in percentages rounded to 2 decimal places.
+
+Notes:
+
+- To avoid integer division, you should multiply the click-through rate by 100.0, not 100.
+- Percentage of click-through rate = 100.0 * Number of clicks / Number of impressions
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Problem : Second Day Confirmation (Tik Tok)
+
+#New TikTok users sign up with their emails and each user receives a text confirmation to activate their account. 
+Assume you are given the below tables about emails and texts.
+
+Write a query to display the ids of the users who did not confirm on the first day of sign-up, but confirmed on the second day.
+
+Assumption: action_date is the date when the user activated their account and confirmed their sign-up through the text.
+
+ create table emails
+(email_id int,
+user_id int,
+signup_date datetime
+);
+
+insert into emails values
+(125,	7771,	'2022-06-14 00:00:00'),
+(236,	6950,	'2022-07-01 00:00:00'),
+(433,	1052,	'2022-07-09 00:00:00'),
+(450,   8963,	'2022-08-02 00:00:00'),
+(555,	8963,	'2022-08-09 00:00:00'),
+(741,	1235,	'2022-07-25 00:00:00');
+
+create table texts 
+(text_id int,
+email_id int,
+signup_action varchar(50),
+action_date datetime
+);
+
+insert into texts values
+(6878,	125,	"Confirmed", '2022/06/14 00:00:00'),
+(6997,	433,	"Not confirmed", '2022/07/19 00:00:00'),
+(7000,	433,	"Confirmed", '2022/07/10 00:00:00'),
+(9841,	236,	"Confirmed", '2022/07/01 00:00:00'),
+(2800,	555,	"Confirmed", '2022/08/11 00:00:00'),
+(1568,	741,	"Confirmed", '2022/07/26 00:00:00'),
+(1255,	555,	"Not confirmed", '2022/08/09 00:00:00'),
+(1522,	741,	"Not confirmed", '2022/07/25 00:00:00'),
+(6800,	450,	"Not confirmed", '2022/08/02 00:00:00'),
+(2660,	555,	"Not confirmed", '2022/08/09 00:00:00');
+
+select * from texts;
+
+select user_id from emails 
+inner join texts on emails.email_id = texts.email_id
+where action_date = date_add(signup_date , interval 1 day)
+and signup_action = "confirmed";   
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Problem : Repeat Purchases on Multiple Days ( Stitch Fix )
+
+# Assume you are given the table below containing information on user purchases.
+Write a query to obtain the number of users who purchased the same product on two or more different days.
+Output the number of unique users.
+PS. On 26 Oct 2022, we expanded the purchases data set, thus the official output may vary from before.
+
+create table if not exists purchases (
+user_id	integer,
+product_id	integer,
+quantity	integer,
+purchase_date	datetime);
+
+insert into purchases values
+(333,	1122,	9,	'2022-06-02'),
+(333,	1122,	10	,'2022-06-02'),
+(536,	3223,	6,	'2022-01-11'),
+(827,	3585,	35,	'2022-02-20'),
+(536,3223,	5,	'2022-03-02'),
+(536,	1435,	10,	'2022-03-02'),
+(333,	1122,	8,	'2022-06-02'),
+(827,	3585,	12,	'2022-04-09'),
+(827,	2452,	45,'2022-04-09'),
+(536,	3223,	34,	'2022-04-28');
+
+select * from purchases;
+
+select p1.user_id from purchases as p1
+inner join purchases as p2 
+on p1.user_id = p2.user_id
+where p1.product_id = p2.product_id
+and p1.purchase_date <> p2.purchase_date
+group by p1.user_id;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Problem : Card Launch Success (JP Morgan)
+
+# Your team at JPMorgan Chase is soon launching a new credit card. You are asked to estimate how many cards you'll issue in the first month.
+Before you can answer this question, you want to first get some perspective on how well new credit card launches typically do in their first month.
+
+Write a query that outputs the name of the credit card, and how many cards were issued in its launch month. 
+The launch month is the earliest record in the monthly_cards_issued table for a given card. Order the results starting from the biggest issued amount.
+
+create table monthly_cards_issued(
+card_name varchar(50),
+issued_amount int,
+issue_month int,
+issue_year int
+);
+
+  insert into monthly_cards_issued values
+ ("Chase Sapphire Reserve", 160000, 12, 2020),
+ ("Chase Sapphire Reserve", 170000, 1, 2021),
+ ("Chase Sapphire Reserve", 175000, 2, 2021),
+ ("Chase Sapphire Reserve", 180000, 3, 2021),
+ ("Chase Freedom Flex",	55000,	1, 2021),
+ ("Chase Freedom Flex",	60000,	2, 2021),
+ ("Chase Freedom Flex",	65000,	3, 2021),
+ ("Chase Freedom Flex",	70000,	4, 2021),
+ ("Chase Sapphire Reserve", 150000, 11, 2020);
+
+  select * from monthly_cards_issued;
+
+ select distinct ( t1.card_name), t1.issued_amount, t1.issue_year, t1.issue_month from monthly_cards_issued as t1
+ inner join monthly_cards_issued as t2
+ on t1.card_name = t2.card_name
+ where t1.issue_month < t2.issue_month
+ and t1.issue_year >= t2.issue_year
+ group by t1.card_name;
+ 
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
 
 
 
 
-    
+
+
+
+
+
+
+
  
