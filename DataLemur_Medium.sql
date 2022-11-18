@@ -280,7 +280,63 @@ issue_year int
  
  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  
+# Problem : Teams Power Users (Microsoft - Easy)
 
+# Write a query to find the top 2 power users who sent the most messages on Microsoft Teams in August 2022.
+Display the IDs of these 2 users along with the total number of messages they sent. Output the results in descending count of the messages.
+
+Assumption: No two users has sent the same number of messages in August 2022.
+
+create table if not exists messages (
+message_id	integer,
+sender_id	integer,
+receiver_id	integer,
+content	varchar(100),
+sent_date varchar(20));
+
+
+insert into messages values
+(100,2520,	6987,	"Send this out now!",	"08/16/2021"),
+(922,3601,	4500,	"Get on the call",	"08/10/2022"),
+(819,2310,	4500,	"What's the status on this?	","07/10/2022"),
+(743,3601,	8752,	"Let's take this offline",	"06/14/2022"),
+(902,4500,	3601,	"Only if you're buying",	"08/03/2022"),
+(901,3601,	4500,	"You up?",	"08/03/2022"),
+(966,3601,	7852,	"Meet me in five!",	"08/17/2022"),
+(942,2520,	3561,	"How much do you know about Data Science?",	"08/17/2022"),
+(888,3601,	7855,	"DataLemur has awesome user base!",	"08/12/2022"),
+(898,2520,	9630,	"ready for your upcoming presentation?",	"08/13/2022" ),
+(990,2520,	8520,	"Maybe it was done by the automation process",	"08/19/2022" );
+
+alter table messages
+add column sent_date_new date after sent_date;
+
+select * from messages;
+
+update messages
+set sent_date_new = str_to_date(sent_date, '%m/%d/%Y');
+
+describe messages;
+
+ALTER TABLE messages
+DROP COLUMN sent_date;
+
+
+select sender_id , count(message_id) as msg_count from messages
+where sent_date_new between "2022-07-31" and "2022-09-01"
+group by sender_id
+order by msg_count desc
+limit 2;
+
+
+select sender_id , count(message_id) as msg_count from messages
+where EXTRACT(MONTH FROM sent_date_new) = '8'
+  AND EXTRACT(YEAR FROM sent_date_new) = '2022'
+group by sender_id
+order by msg_count desc
+limit 2;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
