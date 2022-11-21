@@ -338,6 +338,58 @@ limit 2;
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Problem : Supercloud Customer ( Microsoft)
+
+# A Microsoft Azure Supercloud customer is a company which buys at least 1 product from each Azure product category.
+
+Write a query to report all companies which are Supercloud customers, arranging your order in ascending by customer ID.
+
+create table customer_contracts
+(customer_id int,
+product_id int,
+amount int
+);
+insert into customer_contracts values
+(1,	1,	1000),
+(2, 2,	2000),
+(2,	6,	2000),
+(3,	1,	1100),
+(4,	1,	1000),
+(4,	6,	2200),
+(6,	5,	2000),
+(1,	4,	2000),
+(7,	7,  5000),
+(1,	6,	1500),
+(7,	1,	1000),
+(7,	4,	4000);
+
+select * from customer_contracts;
+
+create table if not exists products (
+product_id	integer,
+product_category varchar (50),
+product_name varchar(50));
+
+insert into products value
+(1,	"Analytics",	"Azure Databricks"),
+(2,	"Analytics",	"Azure Stream Analytics"),
+(4,	"Containers",	"Azure Kubernetes Service"),
+(5,	"Containers",	"Azure Service Fabric"),
+(6,	"Compute",	"Virtual Machines"),
+(7,	"Compute",	"Azure Functions");
+
+select * from products;
+
+with cte as (
+select distinct ps.product_category, cc.customer_id, cc.product_id,  ps.product_name 
+from customer_contracts as cc
+join products as ps on  cc.product_id = ps.product_id)
+select  cte.customer_id from cte
+group by cte.customer_id
+having count(distinct cte.product_category) = 3
+;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
